@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * Implement a bank class.
  * <p>
@@ -9,10 +11,22 @@
  */
 public class Bank {
 
-    public String bankName;
+    /**
+     * The name of the bank.
+     */
+    private String bankName;
 
+    /**
+     *
+     */
+    private ArrayList<BankAccount> accounts;
+
+    /**
+     * Default constructor.
+     */
     public Bank() {
         bankName = "Illini Bank";
+        accounts = new ArrayList<BankAccount>();
     }
 
     /**
@@ -26,9 +40,16 @@ public class Bank {
      * @return boolean
      */
     public boolean withdrawMoney(final BankAccount bankAccount, final double amount) {
-        /*
-         * Implement this function
-         */
+        bankAccount.setAccountBalance(bankAccount.getAccountBalance() - amount);
+        return true;
+    }
+
+    /**
+     * Adds a new bank account to this bank.
+     * @param bankAccount The account to add.
+     */
+    public void addAccount(final BankAccount bankAccount) {
+        accounts.add(bankAccount);
     }
 
     /**
@@ -42,9 +63,11 @@ public class Bank {
      * @return boolean
      */
     public boolean depositMoney(final BankAccount bankAccount, final double amount) {
-        /*
-         * Implement this function
-         */
+        if (bankAccount.getAccountBalance() >= amount) {
+            bankAccount.setAccountBalance(bankAccount.getAccountBalance() + amount);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -61,9 +84,10 @@ public class Bank {
 
     public boolean transferMoney(final BankAccount source, final BankAccount destination,
             final double amount) {
-        /*
-         * Implement this function
-         */
+        if (withdrawMoney(source, amount) && depositMoney(destination, amount)) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -74,21 +98,15 @@ public class Bank {
      */
 
     public void changeOwnerName(final BankAccount bankAccount, final String name) {
-        /*
-         * Implement this function
-         */
+        bankAccount.setOwnerName(name);
     }
 
-    public static int totalAccounts = 0;
     /**
-     * Uses static variable to get number of bank accounts opened.
-     *
+     * Uses length of the list of accounts to get the total accounts in the bank.
      * @return the total number of accounts
      */
-    public static int getNumberOfAccount() {
-        /*
-         * Implement this function
-         */
+    public int getNumberOfAccounts() {
+        return accounts.size();
     }
 
     /**
@@ -103,10 +121,12 @@ public class Bank {
         System.out.println("We are excited to have you banking with us!\n\n");
 
         // Create Bank Accounts
-        BankAccount account1 = new BankAccount("John Doe", BankAccountType.CHECKINGS);
+        BankAccount account1 = new BankAccount("John Doe", BankAccount.BankAccountType.CHECKINGS);
+        bank.addAccount(account1);
         System.out.println("Bank account for John Doe created");
 
-        BankAccount account2 = new BankAccount("Jony Ive", BankAccountType.STUDENT);
+        BankAccount account2 = new BankAccount("Jony Ive", BankAccount.BankAccountType.STUDENT);
+        bank.addAccount(account2);
         System.out.println("Bank account for Johy Ive created\n\n");
 
         // Deposit money to both accounts and print new balance
@@ -121,6 +141,6 @@ public class Bank {
 
         // Print number of accounts
         System.out.print("Number of active accounts at " + bank.bankName + " are ");
-        System.out.println(Bank.totalAccounts);
+        System.out.println(bank.getNumberOfAccounts());
     }
 }
